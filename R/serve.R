@@ -133,7 +133,7 @@ server_cmd = function() {
     jekyll = 'bundle exec jekyll',
     generator()
   )
-  return cmd
+  return(cmd)
 }
 
 jekyll_server_args = function(host, port) {
