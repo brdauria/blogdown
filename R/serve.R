@@ -21,7 +21,8 @@
 #' @export
 serve_site = function(...) {
   serve = switch(
-    generator(), hugo = serve_it(),
+    generator(),
+    hugo = serve_it(),
     jekyll = serve_it(
       '_config.yml', baseurl = get_config2('baseurl', ''),
       pdir = get_config2('destination', '_site')
@@ -65,7 +66,7 @@ serve_it = function(config = config_files, pdir = publish_dir(), baseurl = site_
 
     # launch the hugo/jekyll/hexo server
     g = generator()
-    cmd = if (g == 'hugo') find_hugo() else g
+    cmd = server_cmd()
     host = server$host; port = server$port; intv = server$interval
     if (!servr:::port_available(port, host)) stop(
       'The port ', port, ' at ', host, ' is unavailable', call. = FALSE
@@ -123,6 +124,16 @@ serve_it = function(config = config_files, pdir = publish_dir(), baseurl = site_
 
     return(invisible())
   }
+}
+
+server_cmd = function() {
+  cmd = switch(
+    generator(),
+    hugo = find_hugo(),
+    jekyll = 'bundle exec jekyll',
+    generator()
+  )
+  return cmd
 }
 
 jekyll_server_args = function(host, port) {
